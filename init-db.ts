@@ -3,13 +3,26 @@ import {COURSES, findLessonsForCourse} from './db-data';
 
 import * as firebase from 'firebase';
 
+// old config from course author
+// var config = {
+//     apiKey: "AIzaSyDNPCbN20dZrAbGChRjyBSDmu2uRiPyBMk",
+//     authDomain: "test-a6f61.firebaseapp.com",
+//     databaseURL: "https://test-a6f61.firebaseio.com",
+//     projectId: "test-a6f61",
+//     storageBucket: "test-a6f61.appspot.com",
+//     messagingSenderId: "24603706805"
+// };
+
+// my public db creds
 var config = {
-    apiKey: "AIzaSyDNPCbN20dZrAbGChRjyBSDmu2uRiPyBMk",
-    authDomain: "test-a6f61.firebaseapp.com",
-    databaseURL: "https://test-a6f61.firebaseio.com",
-    projectId: "test-a6f61",
-    storageBucket: "test-a6f61.appspot.com",
-    messagingSenderId: "24603706805"
+  apiKey: "AIzaSyBN-2nngePTAxS37o2BcmLDH4a-tGGybEg",
+  authDomain: "udemy-fireb-angularunicourse.firebaseapp.com",
+  databaseURL: "https://udemy-fireb-angularunicourse.firebaseio.com",
+  projectId: "udemy-fireb-angularunicourse",
+  storageBucket: "udemy-fireb-angularunicourse.appspot.com",
+  messagingSenderId: "852862296693",
+  appId: "1:852862296693:web:3a14fc2297486ac8e08e3c",
+  measurementId: "G-3MPGWWX4EF"
 };
 
 console.log("Uploading data to the database with the following config:\n");

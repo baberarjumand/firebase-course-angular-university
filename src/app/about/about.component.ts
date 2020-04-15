@@ -97,7 +97,6 @@ export class AboutComponent implements OnInit {
     /////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////
     // start of video 3.3
-
     // snapshotChanges() returns a snapshot object, which contains a
     //  type and a payload
     // type is a string and one of 3 values: added, removed, modified
@@ -139,24 +138,23 @@ export class AboutComponent implements OnInit {
     // stateChanges() is ideal if we want to keep an in-memory database on client
     //  in sync with the database
     // stateChanges() gives us back incremental changes after the first subscribe
-
-    // use stateChanges() to fetch courses collection
-    this.fsdb
-      .collection("courses")
-      .stateChanges()
-      .subscribe((snaps) => {
-        console.log(snaps);
-
-        // // map all snapshots to a course array
-        // const courses: Course[] = snaps.map((snap) => {
-        //   return <Course>{
-        //     id: snap.payload.doc.id,
-        //     ...(snap.payload.doc.data() as Course),
-        //   };
-        // });
-        // console.log(courses);
-      });
     //
+    // // use stateChanges() to fetch courses collection
+    // this.fsdb
+    //   .collection("courses")
+    //   .stateChanges()
+    //   .subscribe((snaps) => {
+    //     console.log(snaps);
+    //     // // map all snapshots to a course array
+    //     // const courses: Course[] = snaps.map((snap) => {
+    //     //   return <Course>{
+    //     //     id: snap.payload.doc.id,
+    //     //     ...(snap.payload.doc.data() as Course),
+    //     //   };
+    //     // });
+    //     // console.log(courses);
+    //   });
+    // //
     // end of video 3.3
     /////////////////////////////////////////////////////////////////
   }

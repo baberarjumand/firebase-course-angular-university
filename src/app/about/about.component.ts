@@ -3,6 +3,7 @@ import * as fb from "firebase/app";
 import "firebase/firestore";
 import { Course } from "../model/course";
 import { environment } from "../../environments/environment";
+import { AngularFirestore } from "@angular/fire/firestore";
 
 // // my public db creds
 // const config = {
@@ -27,7 +28,7 @@ import { environment } from "../../environments/environment";
   styleUrls: ["./about.component.css"],
 })
 export class AboutComponent implements OnInit {
-  constructor() {}
+  constructor(private fsdb: AngularFirestore) {}
 
   ngOnInit() {
     /////////////////////////////////////////////////////////////////
@@ -75,6 +76,17 @@ export class AboutComponent implements OnInit {
     //   });
     //
     // end of video 2.4
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.2
+
+    // get all courses as an array, without ids
+    this.fsdb
+      .collection("courses")
+      .valueChanges()
+      .subscribe((val) => console.log(val));
+
+    // end of video 3.2
     /////////////////////////////////////////////////////////////////
   }
 }

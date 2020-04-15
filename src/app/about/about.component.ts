@@ -86,14 +86,78 @@ export class AboutComponent implements OnInit {
     //  but not suitable if we want to edit a doc
     // for that purpose, we use snapshotChanges()
     // valueChanges() is a live observable, i.e. it does not complete
+    // //
+    // // get all courses as an array, without ids
+    // this.fsdb
+    //   .collection("courses")
+    //   .valueChanges()
+    //   .subscribe((val) => console.log(val));
+    // //
+    // end of video 3.2
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.3
+
+    // snapshotChanges() returns a snapshot object, which contains a
+    //  type and a payload
+    // type is a string and one of 3 values: added, removed, modified
+    // payload contains the doc from the collection we are querying
+    // payload has a doc property, in which we can get doc id and data
+    // snapshotChanges(), like valueChanges() is also a live connection
+    //  to the db, where changes to db are emitted in real-time,
+    //  it emits one new value containing the whole state of collection
+    // unlike valueChanges(), we receive a complete snapshot (with other metadata)
+    //  instead of only the values, incl. the doc ids
+    // //
+    // // use snapshotChanges() to get courses with ids
+    // this.fsdb
+    //   .collection("courses")
+    //   .snapshotChanges()
+    //   .subscribe((snaps) => {
+    //     // map all snapshots to a course array
+    //     const courses: Course[] = snaps.map((snap) => {
+    //       return <Course>{
+    //         id: snap.payload.doc.id,
+    //         ...(snap.payload.doc.data() as Course),
+    //       };
+    //     });
+    //     console.log(courses);
+    //   });
     //
-    // get all courses as an array, without ids
+    // another observable method to query collections is stateChanges()
+    // we get back a similar object to the one we got from snapshotChanges()
+    // there is a type and a payload property, payload contains the id and data
+    // however, unlike snapshotChanges(), stateChanges() is not going to give
+    //  us back the complete collection each time a modification is made to db data
+    // when a change in data is made, we don't get back an array with all docs
+    //  in collection, we only get one element with type MODIFIED, and the payload
+    //  with the doc id and the new modified data
+    // snapshotChanges() always return the complete current state of the collection
+    // stateChanges() only returns the doc that was modified
+    // if we had a 1000 courses, snapshotChanges() would return a 1000 courses even
+    //  if any single course is modified
+    // stateChanges() is ideal if we want to keep an in-memory database on client
+    //  in sync with the database
+    // stateChanges() gives us back incremental changes after the first subscribe
+
+    // use stateChanges() to fetch courses collection
     this.fsdb
       .collection("courses")
-      .valueChanges()
-      .subscribe((val) => console.log(val));
+      .stateChanges()
+      .subscribe((snaps) => {
+        console.log(snaps);
+
+        // // map all snapshots to a course array
+        // const courses: Course[] = snaps.map((snap) => {
+        //   return <Course>{
+        //     id: snap.payload.doc.id,
+        //     ...(snap.payload.doc.data() as Course),
+        //   };
+        // });
+        // console.log(courses);
+      });
     //
-    // end of video 3.2
+    // end of video 3.3
     /////////////////////////////////////////////////////////////////
   }
 }

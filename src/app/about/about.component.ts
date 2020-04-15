@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import * as fb from "firebase/app";
 import "firebase/firestore";
 import { Course } from "../model/course";
+import { environment } from "../../environments/environment";
 
 // // my public db creds
 // const config = {
@@ -15,6 +16,7 @@ import { Course } from "../model/course";
 //   measurementId: "G-3MPGWWX4EF",
 // };
 // fb.initializeApp(config);
+// fb.initializeApp(environment.firebase);
 // const db = fb.firestore();
 // // const settings = { timestampsInSnapshots: true };
 // // db.settings(settings);
@@ -74,6 +76,5 @@ export class AboutComponent implements OnInit {
     //
     // end of video 2.4
     /////////////////////////////////////////////////////////////////
-
   }
 }

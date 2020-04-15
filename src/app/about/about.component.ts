@@ -79,13 +79,20 @@ export class AboutComponent implements OnInit {
     /////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////
     // start of video 3.2
-
+    //
+    // valueChanges() is a live observable that emits a new value
+    //  anytime a change is made to any document in db
+    // valueChanges() is good for reading and displaying data,
+    //  but not suitable if we want to edit a doc
+    // for that purpose, we use snapshotChanges()
+    // valueChanges() is a live observable, i.e. it does not complete
+    //
     // get all courses as an array, without ids
     this.fsdb
       .collection("courses")
       .valueChanges()
       .subscribe((val) => console.log(val));
-
+    //
     // end of video 3.2
     /////////////////////////////////////////////////////////////////
   }

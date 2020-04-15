@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import * as fb from "firebase/app";
 import "firebase/firestore";
+import { Course } from "../model/course";
 
 // my public db creds
 const config = {
@@ -28,8 +29,51 @@ export class AboutComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    db.doc("courses/wHs2CQZRPq9iMmA9T5Ja")
+    /////////////////////////////////////////////////////////////////
+    // start of video 2.3
+
+    // db.doc("courses/wHs2CQZRPq9iMmA9T5Ja")
+    //   .get()
+    //   .then((snap) => console.log(snap.data()));
+
+    // end of video 2.3
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 2.4
+
+    // get courses collection with metadata
+    // db.collection("courses")
+    //   .get()
+    //   .then((snaps) => console.log(snaps));
+
+    // get array of courses
+    // db.collection("courses")
+    //   .get()
+    //   .then((snaps) => {
+    //     console.log(snaps.docs.map((snap) => snap.data()));
+    //   });
+
+    // get all course ids
+    // db.collection("courses")
+    //   .get()
+    //   .then((snaps) => {
+    //     console.log(snaps.docs.map((snap) => snap.id));
+    //   });
+
+    // get courses with ids
+    db.collection("courses")
       .get()
-      .then((snap) => console.log(snap.data()));
+      .then((snaps) => {
+        const courses: Course[] = snaps.docs.map((snap) => {
+          return <Course>{
+            id: snap.id,
+            ...snap.data(),
+          };
+        });
+        console.log(courses);
+      });
+
+    // end of video 2.4
+    /////////////////////////////////////////////////////////////////
   }
 }

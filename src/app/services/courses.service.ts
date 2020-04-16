@@ -3,6 +3,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { Course } from "../model/course";
 import { map, first } from "rxjs/operators";
+import { convertSnaps } from "./db-utils";
 
 @Injectable({
   providedIn: "root",
@@ -142,22 +143,22 @@ export class CoursesService {
     //     first()
     //   );
 
-    // query collection, sort courses by seqNo
-    return this.fsdb
-      .collection("courses", (ref) => ref.orderBy("seqNo"))
-      .snapshotChanges()
-      .pipe(
-        map((snaps) => {
-          // map all snapshots to a course array
-          return snaps.map((snap) => {
-            return <Course>{
-              id: snap.payload.doc.id,
-              ...(snap.payload.doc.data() as Course),
-            };
-          });
-        }),
-        first()
-      );
+    // // query collection, sort courses by seqNo
+    // return this.fsdb
+    //   .collection("courses", (ref) => ref.orderBy("seqNo"))
+    //   .snapshotChanges()
+    //   .pipe(
+    //     map((snaps) => {
+    //       // map all snapshots to a course array
+    //       return snaps.map((snap) => {
+    //         return <Course>{
+    //           id: snap.payload.doc.id,
+    //           ...(snap.payload.doc.data() as Course),
+    //         };
+    //       });
+    //     }),
+    //     first()
+    //   );
 
     // end of video 3.6
     /////////////////////////////////////////////////////////////////
@@ -234,5 +235,32 @@ export class CoursesService {
 
     // end of video 3.8
     /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.10
+
+    // query collection, sort courses by seqNo
+    return this.fsdb
+      .collection("courses", (ref) => ref.orderBy("seqNo"))
+      .snapshotChanges()
+      .pipe(
+        map((snaps) => convertSnaps<Course>(snaps)),
+        first()
+      );
+
+    // end of video 3.10
+    /////////////////////////////////////////////////////////////////
+  }
+
+  findCourseByUrl(courseUrl: string): Observable<Course> {
+    return this.fsdb
+      .collection("courses", (ref) => ref.where("url", "==", courseUrl))
+      .snapshotChanges()
+      .pipe(
+        map((snaps) => {
+          const courses = convertSnaps<Course>(snaps);
+          return courses.length == 1 ? courses[0] : undefined;
+        }),
+        first()
+      );
   }
 }

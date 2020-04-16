@@ -13,6 +13,7 @@ export class CoursesService {
   loadAllCourses(): Observable<Course[]> {
     /////////////////////////////////////////////////////////////////
     // // start of video 3.5
+
     // return this.fsdb
     //   .collection("courses")
     //   .snapshotChanges()
@@ -159,6 +160,30 @@ export class CoursesService {
       );
 
     // end of video 3.6
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.7
+
+    // // sample compound query, seqNo == 5 && lessonsCount >= 5
+    // return this.fsdb
+    //   .collection("courses", (ref) =>
+    //     ref.where("seqNo", "==", 5).where("lessonsCount", ">=", 5)
+    //   )
+    //   .snapshotChanges()
+    //   .pipe(
+    //     map((snaps) => {
+    //       // map all snapshots to a course array
+    //       return snaps.map((snap) => {
+    //         return <Course>{
+    //           id: snap.payload.doc.id,
+    //           ...(snap.payload.doc.data() as Course),
+    //         };
+    //       });
+    //     }),
+    //     first()
+    //   );
+
+    // end of video 3.7
     /////////////////////////////////////////////////////////////////
   }
 }

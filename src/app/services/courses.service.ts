@@ -185,5 +185,54 @@ export class CoursesService {
 
     // end of video 3.7
     /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.8
+
+    // sample compound query that throws an error
+    // seqNo >= 5 && lessonsCount >= 5
+    // return this.fsdb
+    //   .collection("courses", (ref) =>
+    //     ref.where("seqNo", ">=", 5).where("lessonsCount", ">=", 5)
+    //   )
+    //   .snapshotChanges()
+    //   .pipe(
+    //     map((snaps) => {
+    //       // map all snapshots to a course array
+    //       return snaps.map((snap) => {
+    //         return <Course>{
+    //           id: snap.payload.doc.id,
+    //           ...(snap.payload.doc.data() as Course),
+    //         };
+    //       });
+    //     }),
+    //     first()
+    //   );
+
+    // sample compound query that works
+    // seqNo >= 5 && seqNo <= 10
+    // return this.fsdb
+    //   .collection("courses", (ref) =>
+    //     ref.where("seqNo", ">=", 5).where("seqNo", "<=", 10)
+    //   )
+    //   .snapshotChanges()
+    //   .pipe(
+    //     map((snaps) => {
+    //       // map all snapshots to a course array
+    //       return snaps.map((snap) => {
+    //         return <Course>{
+    //           id: snap.payload.doc.id,
+    //           ...(snap.payload.doc.data() as Course),
+    //         };
+    //       });
+    //     }),
+    //     first()
+    //   );
+
+    // note that the following 2 queries will each need their own separate indexes
+    // seqNo == 5 && lessonsCount >= 5
+    // seqNo >= 5 && lessonsCount == 5
+
+    // end of video 3.8
+    /////////////////////////////////////////////////////////////////
   }
 }

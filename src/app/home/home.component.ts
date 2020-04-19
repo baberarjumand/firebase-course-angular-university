@@ -3,7 +3,7 @@ import { Course } from "../model/course";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { CoursesService } from '../services/courses.service';
+import { CoursesService } from "../services/courses.service";
 
 @Component({
   selector: "home",
@@ -53,6 +53,32 @@ export class HomeComponent implements OnInit {
     /////////////////////////////////////////////////////////////////
     // start of video 3.5
 
+    // this.courses$ = this.coursesService.loadAllCourses();
+
+    // this.beginnerCourses$ = this.courses$.pipe(
+    //   map((courses) =>
+    //     courses.filter((course) => course.categories.includes("BEGINNER"))
+    //   )
+    // );
+
+    // this.advancedCourses$ = this.courses$.pipe(
+    //   map((courses) =>
+    //     courses.filter((course) => course.categories.includes("ADVANCED"))
+    //   )
+    // );
+
+    // end of video 3.5
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.14
+
+    this.reloadCourses();
+
+    // end of video 3.14
+    /////////////////////////////////////////////////////////////////
+  }
+
+  reloadCourses() {
     this.courses$ = this.coursesService.loadAllCourses();
 
     this.beginnerCourses$ = this.courses$.pipe(
@@ -66,8 +92,5 @@ export class HomeComponent implements OnInit {
         courses.filter((course) => course.categories.includes("ADVANCED"))
       )
     );
-
-    // end of video 3.5
-    /////////////////////////////////////////////////////////////////
   }
 }

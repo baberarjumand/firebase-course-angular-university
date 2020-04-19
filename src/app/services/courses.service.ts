@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 import { Course } from "../model/course";
 import { map, first } from "rxjs/operators";
 import { convertSnaps } from "./db-utils";
@@ -286,5 +286,7 @@ export class CoursesService {
       );
   }
 
-  saveCourse(courseId: string, changes: Partial<Course>): Observable<any> {}
+  saveCourse(courseId: string, changes: Partial<Course>): Observable<any> {
+    return from(this.fsdb.doc(`courses/${courseId}`).update(changes));
+  }
 }

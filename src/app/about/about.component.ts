@@ -85,7 +85,7 @@ export class AboutComponent implements OnInit {
     // valueChanges() is good for reading and displaying data,
     //  but not suitable if we want to edit a doc
     // for that purpose, we use snapshotChanges()
-    // valueChanges() is a live observable, i.e. it does not complete
+    // valueChanges() is a live observable, and it does not complete
     // //
     // // get all courses as an array, without ids
     // this.fsdb

@@ -4,7 +4,7 @@ import "firebase/firestore";
 import { Course } from "../model/course";
 import { environment } from "../../environments/environment";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { of } from 'rxjs';
+import { of } from "rxjs";
 
 // // my public db creds
 // const config = {
@@ -190,6 +190,35 @@ export class AboutComponent implements OnInit {
     batch$.subscribe();
 
     // end of video 3.16
+    /////////////////////////////////////////////////////////////////
+  }
+
+  async runTransaction() {
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.17
+
+    const newCounter = await this.fsdb.firestore.runTransaction(
+      async (transaction) => {
+        console.log("Running transaction...");
+
+        // ref to serverless angular firebase course
+        const courseRef = this.fsdb.doc("/courses/wHs2CQZRPq9iMmA9T5Ja").ref;
+
+        const snap = await transaction.get(courseRef);
+
+        const course = <Course>snap.data();
+
+        const newLessonsCount = course.lessonsCount + 1;
+
+        transaction.update(courseRef, { lessonsCount: newLessonsCount });
+
+        return newLessonsCount;
+      }
+    );
+
+    console.log("result lessons count = ", newCounter);
+
+    // end of video 3.17
     /////////////////////////////////////////////////////////////////
   }
 }

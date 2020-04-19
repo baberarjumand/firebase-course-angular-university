@@ -4,6 +4,7 @@ import "firebase/firestore";
 import { Course } from "../model/course";
 import { environment } from "../../environments/environment";
 import { AngularFirestore } from "@angular/fire/firestore";
+import { of } from 'rxjs';
 
 // // my public db creds
 // const config = {
@@ -97,6 +98,7 @@ export class AboutComponent implements OnInit {
     /////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////
     // start of video 3.3
+    //
     // snapshotChanges() returns a snapshot object, which contains a
     //  type and a payload
     // type is a string and one of 3 values: added, removed, modified
@@ -156,6 +158,38 @@ export class AboutComponent implements OnInit {
     //   });
     // //
     // end of video 3.3
+    /////////////////////////////////////////////////////////////////
+  }
+
+  batchWriteSave() {
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.16
+
+    // ref for serverless angular firebase course
+    const firebaseCourseRef = this.fsdb.doc("/courses/wHs2CQZRPq9iMmA9T5Ja")
+      .ref;
+
+    const angDeepDiveCourseRef = this.fsdb.doc("/courses/joJyboMT3aXmY4aLW17C")
+      .ref;
+
+    const batch = this.fsdb.firestore.batch();
+
+    batch.update(firebaseCourseRef, {
+      titles: {
+        description: "Firebase Course",
+      },
+    });
+
+    batch.update(angDeepDiveCourseRef, {
+      titles: {
+        description: "Angular Deep Dive Course",
+      },
+    });
+
+    const batch$ = of(batch.commit());
+    batch$.subscribe();
+
+    // end of video 3.16
     /////////////////////////////////////////////////////////////////
   }
 }

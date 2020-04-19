@@ -159,6 +159,26 @@ export class AboutComponent implements OnInit {
     // //
     // end of video 3.3
     /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    // start of video 3.18
+    //
+    // // ref to serverless angular firebase course
+    // const courseRef = this.fsdb
+    //   .doc("/courses/wHs2CQZRPq9iMmA9T5Ja")
+    //   .snapshotChanges()
+    //   .subscribe((snap) => {
+    //     const course: any = snap.payload.data();
+    //     console.log("course.relatedCourseRef: ", course.relatedCourseRef);
+    //   });
+    //
+    // // ref to angular deep dive course
+    // const ref = this.fsdb
+    //   .doc("courses/joJyboMT3aXmY4aLW17C")
+    //   .snapshotChanges()
+    //   .subscribe((doc) => console.log("ref: ", doc.payload.ref));
+    //
+    // end of video 3.18
+    /////////////////////////////////////////////////////////////////
   }
 
   batchWriteSave() {

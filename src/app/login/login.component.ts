@@ -1,7 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, NgZone } from "@angular/core";
 import * as firebaseui from "firebaseui";
 import * as firebase from "firebase/app";
 import { AngularFireAuth } from "@angular/fire/auth";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "login",
@@ -11,7 +12,11 @@ import { AngularFireAuth } from "@angular/fire/auth";
 export class LoginComponent implements OnInit {
   ui: firebaseui.auth.AuthUI;
 
-  constructor(private afAuth: AngularFireAuth) {}
+  constructor(
+    private afAuth: AngularFireAuth,
+    private router: Router,
+    private ngZone: NgZone
+  ) {}
 
   ngOnInit() {
     const uiConfig = {
@@ -28,5 +33,8 @@ export class LoginComponent implements OnInit {
     this.ui.start("#firebaseui-auth-container", uiConfig);
   }
 
-  onLoginSuccessful() {}
+  onLoginSuccessful(result) {
+    console.log(result);
+    this.ngZone.run(() => this.router.navigateByUrl("/courses"));
+  }
 }

@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onLoginSuccessful(result) {
-    console.log(result);
+    // console.log(result);
     this.ngZone.run(() => this.router.navigateByUrl("/courses"));
   }
 }

@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   constructor(private afAuth: AngularFireAuth) {}
 
   ngOnInit() {
-    this.afAuth.authState.subscribe((user) => console.log(user));
+    // this.afAuth.authState.subscribe((user) => console.log(user));
     this.isLoggedIn$ = this.afAuth.authState.pipe(map((user) => !!user));
     this.isLoggedOut$ = this.isLoggedIn$.pipe(map((loggedIn) => !loggedIn));
     this.pictureUrl$ = this.afAuth.authState.pipe(

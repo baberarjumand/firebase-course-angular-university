@@ -1,0 +1,336 @@
+rules_version = '2';
+service cloud.firestore {
+
+//   match /databases/{database}/documents {
+//     match /{document=**} {
+//     	//////////////////////////////////////////////////////////////////////
+//     	// start of video 5.1
+    	
+//     	// allow read, write: if request.time < timestamp.date(2020, 5, 13);
+//     	allow read: if true;
+//     	allow write: if false;
+      
+//     	// end of video 5.1
+//       //////////////////////////////////////////////////////////////////////
+//     }
+//   }
+
+// 	match /databases/{database}/documents/courses/{courseId} {  
+//   	//////////////////////////////////////////////////////////////////////
+//   	// start of video 5.2
+    
+//     // this set of rules allows to read courses 
+//     // 	but restricts all writes to courses
+//     // the lessons nested collection cannot be read/write to with these
+//     //		rules
+    
+//     allow read;
+//     allow write: if false;
+  	
+//     // start of video 5.2
+//     //////////////////////////////////////////////////////////////////////  
+//   }
+
+	//////////////////////////////////////////////////////////////////////
+  // start of video 5.3
+// 	match /databases/{database}/documents/courses/{courseId} {
+  
+//   	// this match block is equivalent to the 2 match blocks below
+  
+//     allow read;
+//     allow write: if courseId == "wHs2CQZRPq9iMmA9T5Ja";
+    
+//   }
+  
+//   match /databases/{database}/documents/courses/wHs2CQZRPq9iMmA9T5Ja { 
+  	    
+//     // this set of rules allows read/write to one document, the one
+//     //	specified above
+    
+//     allow read;
+//     allow write; 	    
+//   }
+
+// 	match /databases/{database}/documents/courses/{courseId} {  
+//     allow read;
+//     allow write: if false;
+//   }
+
+  // start of video 5.3
+  //////////////////////////////////////////////////////////////////////  
+	
+	//////////////////////////////////////////////////////////////////////
+  // start of video 5.4
+  
+//   // this nested implementation is equivalent to the match block below
+//   match /databases/{database}/documents { 
+    	
+//     // this match block targets docs in courses collection
+//   	match /courses/{courseId} {
+//     	allow read;
+//     	allow create;
+// 			allow delete: if false;    
+//     	allow update: if courseId == "wHs2CQZRPq9iMmA9T5Ja";
+//     }
+    
+//     // this match block will target users collection in same database
+//     // match /users/{userId} {}
+    
+//     // this is a wildcard, this example will match everything in the
+//     //	in the specified path, which in this case is
+//     //	'/databases/{database}/documents'
+//     // this match block would affect the complete structure of our db
+//     match /{restOfPath=**} {
+//     	// with this rule, the previously inaccessible lessons nested
+//       //	collection can now be accessed
+//     	allow read, write;
+//     }
+    
+//   }
+  
+//   match /databases/{database}/documents/courses/{courseId} {
+//     // all docs at this path can be read and queried
+//     allow read;
+    
+//     // any user can create a new doc in this collection
+//     allow create;
+        
+//     // no user is allowed to delete any doc in this collection
+// 		allow delete: if false;
+    
+//     // any user can update this doc only
+//     allow update: if courseId == "wHs2CQZRPq9iMmA9T5Ja";
+//   }
+  
+  // end of video 5.4
+  ////////////////////////////////////////////////////////////////////// 
+  
+  //////////////////////////////////////////////////////////////////////
+  // start of video 5.5
+  
+//   match /databases/{database}/documents {
+  
+//   	match /courses/{courseId} {
+//     	// allow read access to all users, authenticated or not
+//       // allow read;
+      
+//       // allow read access to only authenticated users
+//       allow read: if request.auth.uid != null;
+//     }
+  
+//   }
+  
+  // end of video 5.5
+  ////////////////////////////////////////////////////////////////////// 
+  
+  //////////////////////////////////////////////////////////////////////
+  // start of video 5.6
+  
+//   match /databases/{database}/documents {
+  
+//   function isAuthenticated() {
+//   	return request.auth.uid != null
+//   }
+  
+//   	match /courses/{courseId} {    	
+//       allow read: if isAuthenticated();
+      
+//       match /lessons/{lessonId} {
+//       	allow read: if isAuthenticated();
+//       }
+//     }
+  
+//   }
+  
+  // end of video 5.6
+  ////////////////////////////////////////////////////////////////////// 
+  
+  //////////////////////////////////////////////////////////////////////
+  // start of video 5.7
+  
+  // in this lesson, we will only allow those users to read from db
+  //	which are part of the users collection, a 'white-list' of users	
+  
+//   match /databases/{database}/documents {
+  
+//     function isAuthenticated() {
+//       return request.auth.uid != null
+//     }
+    
+//     function isKnownUser() {
+//     	return isAuthenticated() && 
+//       	exists( /databases/$(database)/documents/users/$(request.auth.uid) );
+//     }
+    
+//     // users collection contains sensitive info
+//     //	so all read/write attempts are denied from front-end clients
+//     // this data should only be visible in firebase console or
+//     //	from cloud functions
+//     match /users/{userId} {
+//     	allow read, write: if false;
+//     }
+  
+//   	match /courses/{courseId} {    	
+//       allow read: if isKnownUser();
+      
+//       match /lessons/{lessonId} {
+//       	allow read: if isKnownUser();
+//       }
+//     }
+  
+//   }
+  
+  // end of video 5.7
+  //////////////////////////////////////////////////////////////////////
+  
+  //////////////////////////////////////////////////////////////////////
+  // start of video 5.8
+  
+  // in this lesson, admin level users will be able to read/write data
+  // normal users will only be able to read the data
+  
+//   match /databases/{database}/documents {
+  
+//     function isAuthenticated() {
+//       return request.auth.uid != null
+//     }
+    
+//     function isKnownUser() {
+//     	return isAuthenticated() && 
+//       	exists( /databases/$(database)/documents/users/$(request.auth.uid) );
+//     }
+    
+//     function isAdmin() {
+//     	return isAuthenticated() &&
+//       	get(/databases/$(database)/documents/users/$(request.auth.uid))
+//         	.data.isAdmin == true;
+//     }
+    
+//     match /users/{userId} {
+//     	allow read, write: if false;
+//     }
+  
+//   	match /courses/{courseId} {    	
+//       allow read: if isKnownUser();
+//       allow write: if isAdmin();
+      
+//       match /lessons/{lessonId} {
+//       	allow read: if isKnownUser();
+//         allow write: if isAdmin();
+//       }
+//     }
+  
+//   }
+  
+  // end of video 5.8
+  //////////////////////////////////////////////////////////////////////
+  
+  //////////////////////////////////////////////////////////////////////
+  // start of video 5.9
+  
+  // in this lesson, we will add a schema, like ones in SQL dbs
+  
+//   match /databases/{database}/documents {
+  
+//     function isValidCourse() {
+//     	return 	request.resource.data.seqNo is number
+//       				&& request.resource.data.lessonsCount is number
+//               && request.resource.data.lessonsCount > 0
+//               && isNonEmptyString("url");
+//     }
+    
+//     function isNonEmptyString(fieldName) {
+//     	return 	request.resource.data[fieldName] is string
+//       				&& request.resource.data[fieldName].size() > 0;
+//     }
+    
+//     function isAuthenticated() {
+//       return request.auth.uid != null
+//     }
+    
+//     function isKnownUser() {
+//     	return isAuthenticated() && 
+//       	exists( /databases/$(database)/documents/users/$(request.auth.uid) );
+//     }
+    
+//     function isAdmin() {
+//     	return isAuthenticated() &&
+//       	get(/databases/$(database)/documents/users/$(request.auth.uid))
+//         	.data.isAdmin == true;
+//     }
+    
+//     match /users/{userId} {
+//     	allow read, write: if false;
+//     }
+  
+//   	match /courses/{courseId} {    	
+//       allow read: if isKnownUser();
+//       allow write: if isAdmin() && isValidCourse();
+      
+//       match /lessons/{lessonId} {
+//       	allow read: if isKnownUser();
+//         allow write: if isAdmin();
+//       }
+//     }
+  
+//   }
+  
+  // end of video 5.9
+  //////////////////////////////////////////////////////////////////////
+  
+  //////////////////////////////////////////////////////////////////////
+  // start of video 5.10
+  
+  // in this lesson, if a course is in draft mode, then updates are
+  //	allowed, otherwise they will be denied
+  
+  match /databases/{database}/documents {
+  
+    function isValidCourse() {
+    	return 	request.resource.data.seqNo is number
+      				&& request.resource.data.lessonsCount is number
+              && request.resource.data.lessonsCount > 0
+              && isNonEmptyString("url");
+    }
+    
+    function isNonEmptyString(fieldName) {
+    	return 	request.resource.data[fieldName] is string
+      				&& request.resource.data[fieldName].size() > 0;
+    }
+    
+    function isAuthenticated() {
+      return request.auth.uid != null
+    }
+    
+    function isKnownUser() {
+    	return isAuthenticated() && 
+      	exists( /databases/$(database)/documents/users/$(request.auth.uid) );
+    }
+    
+    function isAdmin() {
+    	return isAuthenticated() &&
+      	get(/databases/$(database)/documents/users/$(request.auth.uid))
+        	.data.isAdmin == true;
+    }
+    
+    match /users/{userId} {
+    	allow read, write: if false;
+    }
+  
+  	match /courses/{courseId} {    	
+      allow read: if isKnownUser();
+      allow write: if isAdmin() && isValidCourse()
+      	&& resource.data.status == 'draft';
+      
+      match /lessons/{lessonId} {
+      	allow read: if isKnownUser();
+        allow write: if isAdmin();
+      }
+    }
+  
+  }
+  
+  // end of video 5.10
+  //////////////////////////////////////////////////////////////////////
+
+}

@@ -1,13 +1,14 @@
-import { Component, OnInit, NgZone, OnDestroy } from "@angular/core";
-import * as firebaseui from "firebaseui";
-import * as firebase from "firebase/app";
-import { AngularFireAuth } from "@angular/fire/auth";
-import { Router } from "@angular/router";
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import * as firebaseui from 'firebaseui';
+import * as firebase from 'firebase/app';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: "login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"],
+  // tslint:disable-next-line: component-selector
+  selector: 'login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
@@ -30,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     };
 
     this.ui = new firebaseui.auth.AuthUI(this.afAuth.auth);
-    this.ui.start("#firebaseui-auth-container", uiConfig);
+    this.ui.start('#firebaseui-auth-container', uiConfig);
   }
 
   ngOnDestroy() {
@@ -39,6 +40,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onLoginSuccessful(result) {
     // console.log(result);
-    this.ngZone.run(() => this.router.navigateByUrl("/courses"));
+    this.ngZone.run(() => this.router.navigateByUrl('/courses'));
   }
 }

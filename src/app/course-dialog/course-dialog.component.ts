@@ -57,7 +57,7 @@ export class CourseDialogComponent implements OnInit {
 
   uploadFile(event) {
     /////////////////////////////////////////////////////////////////
-    // start of video 7.2, 7.3, 7.4
+    // start of video 7.2, 7.3, 7.4, 7.5
 
     const file: File = event.target.files[0];
 
@@ -72,9 +72,17 @@ export class CourseDialogComponent implements OnInit {
       concatMap(() => this.afStorage.ref(filePath).getDownloadURL())
     );
 
-    this.downloadUrl$.subscribe(console.log);
+    const saveUrl$ = this.downloadUrl$.pipe(
+      concatMap((url) =>
+        this.coursesService.saveCourse(this.course.id, {
+          uploadedImageUrl: url,
+        })
+      )
+    );
 
-    // end of video 7.2, 7.3, 7.4
+    saveUrl$.subscribe(console.log);
+
+    // end of video 7.2, 7.3, 7.4, 7.5
     /////////////////////////////////////////////////////////////////
   }
 }

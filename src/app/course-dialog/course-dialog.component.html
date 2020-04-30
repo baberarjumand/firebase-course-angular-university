@@ -29,8 +29,13 @@
         mode="determinate"
         [value]="percentage"
       ></mat-progress-bar>
-      <span>{{ percentage/100 | percent }}</span>
+      <span>{{ percentage / 100 | percent }}</span>
     </div>
+
+    <ng-container *ngIf="downloadUrl$ | async as downloadUrl">
+      <img class="uploaded-image" [src]="downloadUrl" />
+    </ng-container>
+
   </div>
 </mat-dialog-content>
 

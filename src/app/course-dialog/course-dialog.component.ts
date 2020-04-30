@@ -1,21 +1,23 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Course } from '../model/course';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { CoursesService } from '../services/courses.service';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { Course } from "../model/course";
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { CoursesService } from "../services/courses.service";
+import { AngularFireStorage } from "@angular/fire/storage";
+import { Observable } from "rxjs";
+import { last, concatMap } from "rxjs/operators";
 
 @Component({
   selector: "course-dialog",
-  templateUrl: './course-dialog.component.html',
-  styleUrls: ['./course-dialog.component.css'],
+  templateUrl: "./course-dialog.component.html",
+  styleUrls: ["./course-dialog.component.css"],
 })
 export class CourseDialogComponent implements OnInit {
   form: FormGroup;
   description: string;
   course: Course;
-  uploadProgress$: Observable<number>
+  uploadProgress$: Observable<number>;
+  downloadUrl$: Observable<string>;
 
   constructor(
     private fb: FormBuilder,
@@ -55,7 +57,7 @@ export class CourseDialogComponent implements OnInit {
 
   uploadFile(event) {
     /////////////////////////////////////////////////////////////////
-    // start of video 7.2
+    // start of video 7.2, 7.3, 7.4
 
     const file: File = event.target.files[0];
 
@@ -65,9 +67,14 @@ export class CourseDialogComponent implements OnInit {
 
     this.uploadProgress$ = task.percentageChanges();
 
-    task.snapshotChanges().subscribe(console.log);
+    this.downloadUrl$ = task.snapshotChanges().pipe(
+      last(),
+      concatMap(() => this.afStorage.ref(filePath).getDownloadURL())
+    );
 
-    // end of video 7.2
+    this.downloadUrl$.subscribe(console.log);
+
+    // end of video 7.2, 7.3, 7.4
     /////////////////////////////////////////////////////////////////
   }
 }

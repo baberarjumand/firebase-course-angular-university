@@ -4,6 +4,7 @@ import { Course } from '../model/course';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CoursesService } from '../services/courses.service';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: "course-dialog",
@@ -14,6 +15,7 @@ export class CourseDialogComponent implements OnInit {
   form: FormGroup;
   description: string;
   course: Course;
+  uploadProgress$: Observable<number>
 
   constructor(
     private fb: FormBuilder,
@@ -60,6 +62,8 @@ export class CourseDialogComponent implements OnInit {
     const filePath = `courses/${this.course.id}/${file.name}`;
 
     const task = this.afStorage.upload(filePath, file);
+
+    this.uploadProgress$ = task.percentageChanges();
 
     task.snapshotChanges().subscribe(console.log);
 

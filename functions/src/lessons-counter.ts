@@ -1,6 +1,20 @@
 import * as functions from "firebase-functions";
 import { fsdb } from "./init";
 
+function courseTransaction(snap, callBack: Function) {
+  return fsdb.runTransaction(async (transaction) => {
+    const courseRef = snap.ref.parent.parent;
+
+    const courseSnap = await transaction.get(courseRef);
+
+    const course = courseSnap.data();
+
+    const changes = callBack(course);
+
+    transaction.update(courseRef, changes);
+  });
+}
+
 export const onAddLesson = functions.firestore
   .document("courses/{courseId}/lessons/{lessonsId}")
   .onCreate(async (snap, context) => {
@@ -8,15 +22,19 @@ export const onAddLesson = functions.firestore
 
     console.log("Running onAddLesson trigger...");
 
-    return fsdb.runTransaction(async (transaction) => {
-      const courseRef = snap.ref.parent.parent;
+    return courseTransaction(snap, (course) => {
+      return { lessonsCount: (course.lessonsCount || 0) + 1 };
+    });
+  });
 
-      const courseSnap = await transaction.get(courseRef);
+export const onDeleteLesson = functions.firestore
+  .document("courses/{courseId}/lessons/{lessonsId}")
+  .onDelete(async (snap, context) => {
+    // const courseId = context.params.courseId;
 
-      const course = courseSnap.data();
+    console.log("Running onDeleteLesson trigger...");
 
-      const changes = { lessonsCount: course.lessonsCount + 1 };
-
-      transaction.update(courseRef, changes);
+    return courseTransaction(snap, (course) => {
+      return { lessonsCount: (course.lessonsCount || 0) - 1 };
     });
   });

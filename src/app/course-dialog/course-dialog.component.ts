@@ -17,7 +17,7 @@ export class CourseDialogComponent implements OnInit {
   description: string;
   course: Course;
   uploadProgress$: Observable<number>;
-  downloadUrl$: Observable<string>;
+  // downloadUrl$: Observable<string>;
 
   constructor(
     private fb: FormBuilder,
@@ -67,20 +67,22 @@ export class CourseDialogComponent implements OnInit {
 
     this.uploadProgress$ = task.percentageChanges();
 
-    this.downloadUrl$ = task.snapshotChanges().pipe(
-      last(),
-      concatMap(() => this.afStorage.ref(filePath).getDownloadURL())
-    );
+    // temporarily removing downloadUrl$ to test resizeThumbnail() cloud function
+    //  in video 8.10
+    // this.downloadUrl$ = task.snapshotChanges().pipe(
+    //   last(),
+    //   concatMap(() => this.afStorage.ref(filePath).getDownloadURL())
+    // );
 
-    const saveUrl$ = this.downloadUrl$.pipe(
-      concatMap((url) =>
-        this.coursesService.saveCourse(this.course.id, {
-          uploadedImageUrl: url,
-        })
-      )
-    );
+    // const saveUrl$ = this.downloadUrl$.pipe(
+    //   concatMap((url) =>
+    //     this.coursesService.saveCourse(this.course.id, {
+    //       uploadedImageUrl: url,
+    //     })
+    //   )
+    // );
 
-    saveUrl$.subscribe(console.log);
+    // saveUrl$.subscribe(console.log);
 
     // end of video 7.2, 7.3, 7.4, 7.5
     /////////////////////////////////////////////////////////////////

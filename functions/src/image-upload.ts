@@ -131,7 +131,7 @@ export const resizeThumbnail = functions.storage
 
     const thumbnail = uploadedFiles[0];
 
-    const url = thumbnail.getSignedUrl({
+    const url = await thumbnail.getSignedUrl({
       action: "read",
       expires: new Date(3000, 1, 1),
     });
@@ -145,7 +145,8 @@ export const resizeThumbnail = functions.storage
 
     console.log("Saving thumbnail URL to db: ", courseId);
 
-    return fsdb.doc(`courses/${courseId}`).update({ uploadedImageUrl: url });
+    // return fsdb.doc(`courses/${courseId}`).update({ uploadedImageUrl: url });
+    return fsdb.doc(`courses/${courseId}`).update({ iconUrl: url });
 
     // end of video 8.9
     ///////////////////////////////////////////////////////////////////////////////

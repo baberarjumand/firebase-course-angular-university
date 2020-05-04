@@ -32,9 +32,10 @@
       <span>{{ percentage / 100 | percent }}</span>
     </div>
 
-    <ng-container *ngIf="downloadUrl$ | async as downloadUrl">
+    <!-- removing this temporarily to test cloud function -->
+    <!-- <ng-container *ngIf="downloadUrl$ | async as downloadUrl">
       <img class="uploaded-image" [src]="downloadUrl" />
-    </ng-container>
+    </ng-container> -->
 
   </div>
 </mat-dialog-content>

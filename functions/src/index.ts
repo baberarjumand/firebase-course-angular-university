@@ -158,6 +158,45 @@ import { fsdb } from "./init";
 ///////////////////////////////////////////////////////////////////////////////
 // start of video 8.6
 
+// // const express = require("express");
+// import * as express from "express"; // this declaration is more type-safe
+// const cors = require("cors");
+
+// const app = express();
+
+// app.use(
+//   cors({
+//     origin: true,
+//   })
+// );
+
+// app.get("/courses", async (request, response) => {
+//   const snaps = await fsdb.collection("courses").get();
+
+//   const courses: any[] = [];
+
+//   snaps.forEach((snap: any) => courses.push(snap.data()));
+
+//   response.status(200).json({ courses });
+// });
+
+// export const getCourses = functions.https.onRequest(app);
+
+// export const helloWorld = functions.https.onRequest((request, response) => {
+//   //  response.send("Hello from Firebase!");
+//   response.status(200).json({ message: "Hello World" });
+// });
+
+// export { onAddLesson, onDeleteLesson } from "./lessons-counter";
+
+// export { resizeThumbnail } from "./image-upload";
+
+// end of video 8.6
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// start of video 8.7
+
 // const express = require("express");
 import * as express from "express"; // this declaration is more type-safe
 const cors = require("cors");
@@ -191,5 +230,5 @@ export { onAddLesson, onDeleteLesson } from "./lessons-counter";
 
 export { resizeThumbnail } from "./image-upload";
 
-// end of video 8.6
+// end of video 8.7
 ///////////////////////////////////////////////////////////////////////////////

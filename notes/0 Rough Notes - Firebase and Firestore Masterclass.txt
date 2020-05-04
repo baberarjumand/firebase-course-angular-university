@@ -1,0 +1,308 @@
+
+github starting code repo: https://github.com/angular-university/firebase-course
+
+'npm start' to run dev server @ localhost:4200
+
+firebase authentication can be used independently, separately from firestore db or any other firestore services
+
+had problems using node latest features version
+trying now with Long Term Support LTS version 12.16.2
+using LTS solved the problems
+
+# video 1.3 - firebase course dev env setup
+'git checkout -b 1-firebase origin/1-firebase' to get branch from original code repo
+
+# video 1.5 - Setting Up our Firestore NoSQL Database
+db creds in this video are public properties that do not need to be secured
+can be added to front-end client without any problems
+
+'npm run init-db' to populate firebase db with provided courses data
+
+# video 2.1 - firestore nosql database - docs and collections
+collections -> docs -> cols -> docs -> cols -> ...
+
+# video 3.1 - setting up angularFire
+removed environments folder from git tracking
+https://stackoverflow.com/questions/1274057/how-to-make-git-forget-about-a-file-that-was-tracked-but-is-now-in-gitignore
+After this page, add environments folder to .gitignore
+
+# video 3.2
+valueChanges() observable gives us a live connection to firestore db
+	- any changes made in db are immediately received by the observable subscription
+	- valueChanges() is a live observable that does not complete
+	- this observable does not have doc ids
+snapshotChanges() observable also gives us a live connection to firestore db
+	- any changes made in db are immediately received by the observable subscription
+	- does not complete on its own
+	- this observable has doc ids (snap.payload.doc.id)
+	- has a type and payload object
+	- type can be ADDED, MODIFIED, REMOVED
+	- payload has doc data (snap.payload.doc.data())
+	- everytime any doc is modified, snapshotChanges() returns the entire state of the current collections
+		- if a collection had a 1000 docs, and 1 doc was modified, all 1000 docs will be emitted each time a modification is made
+stateChanges() observable is similar in most aspects to snapshotChanges(), except:
+	- it does not emit the entire state of the collection each time a modification happens
+	- it only emits one array with type and payload, where only the modified doc with id and data is emitted
+	
+# video 3.5
+in this lesson, loadAllCourses() in the CoursesService returns an observable that does not complete on its own
+we can use an operator to take the first value that is emitted and then force it to complete
+that operator is first()
+streams returned by AngularFire are live by default
+to change that default behavior, we can use the first() operator
+if we want to capture the first 5 values emitted then complete, we can use take(5) operator
+
+# video 3.6
+size of dataset does not affect query response time
+5 results from a dataset of 500 takes same time as 5 results from a dataset of 5,000,000
+it is the size of the result dataset that affects the query response time
+
+# video 3.8 - query constraints
+you cannot have a query with an inequality/range filter on multiple fields in a single query
+e.g. seqNo >= 5 && lessonsCount >= 5
+this query will throw an error
+
+the inequality/range operator can be done on one field in the query, others need to be exact/equality operators
+
+# video 3.13 - edit dialog component implementation
+doc path has even number of path segments
+	- e.g. courses/${courseId}
+col path has an odd number of path segments
+	- e.g. courses/${courseId}/lessons
+
+# video 3.15 - offline persistence
+to enable offline persistence, in app.module.ts, in @NgModule imports:
+
+AngularFirestoreModule.enablePersistence()
+instead of
+AngularFirestoreModule
+
+# video 3.16 - firebase batched writes
+
+serverless angular firebase course ref
+course 1: /courses/wHs2CQZRPq9iMmA9T5Ja
+
+angular deep dive course ref
+course 2: /courses/joJyboMT3aXmY4aLW17C
+
+# video 3.17 - transactions vs batched writes
+
+transactions provide read-lock i.e. data is locked from access from other sources until transaction completes
+
+# video 5.2 - breaking down firestore security rules
+
+the match paths should always match a document, not a collection
+
+firestore security rules do not cascade down to nested collections
+
+# video 5.3 - how do security rules work?
+
+order of rules does not matter, if any one matching security rule allows read/write, that request will complete
+
+# video 5.4 - nested rules and wildcards
+
+'allow read' is equivalent to 'allow get, list'
+	- get means document can be read
+	- list means document can be queried as part of a collection read request
+	
+'allow write' is equivalent to 'allow create, update, delete'
+	- create, update, delete are pretty self-explanatory
+	
+get, list, create, update, delete - five permission types available for a single doc
+rem, match paths always have to match a doc, cannot match a collection
+
+match blocks can be nested
+
+# video 5.6 - firebase security functions
+
+functions in security rules can only return a boolean
+
+# video 5.7 - authenticate a user from a white-list of users
+
+to define a path variable in a match path => { VARIABLE_NAME }
+to use a path variable in a match path => $( VARIABLE_NAME )
+
+# video 5.9 - adding a schema with security rules
+
+request.resource object contains new document fields that has yet to be committed to the database,
+	plus the entire state of the old document
+
+if we want to access the old/current version of a document, we simply access the resource object,
+	resource points to the current version of the document before the ongoing request
+	has been processed
+	
+request.resource => new version of document, yet to be committed to db
+
+resource => old/current version of document
+
+# video 5.11 - installing firebase command line tools
+
+'npm install -g  firebase-tools' to install firebase cli
+
+'firebase login' to login to firebase from cli
+
+'firebase init' in root directory of project to setup project config
+
+select 'database'
+
+'firebase deploy' to deploy changes to firebase once initial project setup is complete
+
+# video 6.1 - firebase hosting
+
+- automatic ssl certificate provision meaning https server
+
+- 'ng build --prod' to make production deployment
+	- OR 'npm run <SCRIPT_NAME>' if custom script define in package.json
+	
+'firebase init'
+
+select hosting
+
+choose 'dist' directory instead of default 'public'
+
+single page? Yes
+
+Overwrite 'index.html'? No
+
+'firebase deploy'
+
+hosting url: https://udemy-fireb-angularunicourse.web.app
+
+# video 7.1 - what is firebase storage?
+
+'firebase init'
+
+select 'Storage'
+
+continue with default 'storage.rules'
+
+'firebase deploy' to start using firebase storage
+
+# video 8.1 - firebase cloud functions HELLO WORLD
+
+'firebase init'
+
+select FUNCTIONS
+
+choose TYPESCRIPT
+
+YES for TSLint
+
+YES to install dependencies
+
+To build cloud functions locally
+
+'cd /functions'
+
+'npm run build' to compile functions locally
+
+lib folder gets generated -> JS files (index.js) to be deployed generated from index.ts file
+
+'firebase deploy' to deploy cloud functions (this command deploys everything i.e. firestore rules and indexes, hosting files in dist folder, firebase storage rules)
+
+a firebase cloud function is a NodeJS server-side function that we can use to add server-side code to our application
+
+most common use case is processing payments securely
+
+different types of firebase cloud functions:
+	- database/firestore triggers
+	- storage triggers
+	- and others
+	
+responding to http requests is similar to building an express route handler in NodeJS
+
+# video 8.2 - REST endpoints with Express
+
+'npm install --save express' inside functions folder
+
+'npm install --save cors' inside functions folder
+
+# video 8.3
+
+'npm run build' to compile functions locally
+
+'npm run serve' to serve functions locally for testing and debugging locally using local firebase cloud emulator
+
+'http://localhost:5001/udemy-fireb-angularunicourse/us-central1/getCourses/courses' -> local testing url for getCourses() function
+
+got this error when first trying the above url from browser:
+UnhandledPromiseRejectionWarning: Error: Could not load the default credentials. Browse to https://cloud.google.com/docs/authentication/getting-started for more information.
+
+Found this solution in Udemy answers for video 8.3 from YAROSLAV:
+--
+Hi, I've run into same issue. To solve it just go to settings -> service accounts in your firebase console.
+You'll find there this part of code that is used to initialize app
+
+var serviceAccount = require("path/to/serviceAccountKey.json");
+ 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "your database url will be here"
+});
+And button in the bottom Generate new private key click it and you'll see modal window with Generate key button, after hitting it will download json file which contains credentials certificate data, you can paste somewhere in functions folder and just change
+
+path/to/serviceAccountKey.json
+to path to your serviceAccountKey.json file.
+
+After this manipulations all worked for me fine.
+
+And there is full doc for it here with different approaches firebase.google.com/docs/admin/setup?authuser=0
+--
+
+also had to do other minor fixes to correctly import serviceAccountKey.json file
+--
+in init.ts:
+const admin = require("firebase-admin");
+
+// make sure you generate your own Firebase Admin SDK private key from:
+//  Firebase Console -> Project Settings -> Service Accounts -> Generate Private Key
+// const serviceAccount = require("./serviceAccountKey/serviceAccountKey.json");
+import * as data from "./serviceAccountKey/serviceAccountKey.json";
+const serviceAccount = (<any>data).serviceAccountKey;
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://udemy-fireb-angularunicourse.firebaseio.com",
+});
+
+export const fsdb = admin.firestore();
+--
+add this flag to 'compilerOptions' in tsconfig.json:
+"resolveJsonModule": true
+--
+
+'firebase deploy --only functions' to deploy only functions to firebase instead of everything else
+
+'npm run logs' to get logs of cloud function requests to debug cloud function, or from the console log
+
+# video 8.4 - db trigger functions using cloud functions
+
+firestore document trigger methods:
+	- onCreate
+	- onDelete
+	- onUpdate
+	- onWrite
+	
+# video 8.5 - refactor db trigger functions
+
+'firebase deploy --only functions:onAddLesson, functions:onDeleteLesson' to re-deploy only specific functions rather than all functions
+
+# video 8.7 - resize uploaded image to thumbnail
+
+'npm install --save @google-cloud/storage' inside functions folder
+
+# video 8.8 - generate thumbnail from uploaded image using ImageMagick
+
+cli command to use ImageMagick:
+convert -thumbnail 510x287 serverless-angular.png > thumb_serverless-angular.png
+
+'npm install --save child-process-promise'
+- this package is needed to perform a command line invocation using a promise-based API
+
+# video 8.9
+
+'npm install --save rimraf' to be able to execute linux cli command to delete local files on container after thumbnail is generated and uploaded to storage
+
+
+
+

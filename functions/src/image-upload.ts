@@ -1,8 +1,10 @@
 import * as functions from "firebase-functions";
+import { fsdb } from "./init";
 const path = require("path");
 const os = require("os");
 const mkdirp = require("mkdirp-promise");
 const spawn = require("child-process-promise").spawn;
+const rimraf = require("rimraf");
 
 const { Storage } = require("@google-cloud/storage");
 const gCloudService = new Storage();
@@ -95,7 +97,7 @@ export const resizeThumbnail = functions.storage
       outputFilePath
     );
 
-    await bucket.upload(outputFile, {
+    const uploadedFiles = await bucket.upload(outputFile, {
       destination: outputFilePath,
       metadata: metadata,
     });
@@ -103,5 +105,50 @@ export const resizeThumbnail = functions.storage
     // end of video 8.8
     ///////////////////////////////////////////////////////////////////////////////
 
-    return null;
+    ///////////////////////////////////////////////////////////////////////////////
+    // start of video 8.9
+
+    // NEXT STEP: delete generated thumbnail locally after it is uploaded to storage
+
+    // delete local files to avoid filling up the local file system in container
+    //  over time
+
+    // we want to execute cli linux command: 'rm -rf localTempDir'
+    // 'npm install --save rimraf' will help us do that
+
+    // this line deletes the generated thumbnail
+    rimraf.sync(localTempDir);
+
+    // NEXT STEP: delete the file that was originally uploaded by the user
+
+    await originalImageFile.delete();
+
+    // NEXT STEP: create a link to the new generated thumbnail file that
+    //  has already being uploaded to firebase storage at this point
+    // this same link will be saved to firestore db later
+
+    // create link to uploaded thumbnail
+
+    const thumbnail = uploadedFiles[0];
+
+    const url = thumbnail.getSignedUrl({
+      action: "read",
+      expires: new Date(3000, 1, 1),
+    });
+
+    console.log("Generated signed URL: ", url);
+
+    // NEXT STEP: save the generated thumbnail URL in db
+
+    const fragments = fileFullPath.split("/");
+    const courseId = fragments[1];
+
+    console.log("Saving thumbnail URL to db: ", courseId);
+
+    return fsdb.doc(`courses/${courseId}`).update({ uploadedImageUrl: url });
+
+    // end of video 8.9
+    ///////////////////////////////////////////////////////////////////////////////
+
+    // return null;
   });
